@@ -19,14 +19,14 @@ def ocr2(photo):
     random.shuffle(result)
     for i in result:
         pyttsx3.speak(i)
-        op = easygui.buttonbox('好了吗？','ocr模块',['好了','还没好'])
+        op = easygui.buttonbox('好了吗？', 'ocr模块', ['好了', '还没好'])
         if op == '好了':
             pass
         else:
             time.sleep(10)
 
+    easygui.msgbox('使用完毕', 'ocr主程序', '结束')
 
-        easygui.msgbox('使用完毕','ocr主程序','结束')
 
 if __name__ == '__main__':
     ocr1('E:\\1.png')

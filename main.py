@@ -1,4 +1,3 @@
-import easygui
 import ocr
 from easygui import *
 
@@ -8,18 +7,20 @@ class Ocr_tools:
     def main():
         op = buttonbox('欢迎使用ocr工具箱，请选择你要使用的功能', 'ocr主程序', ['提取图片文字', '报听写'])
         if op == '提取图片文字':
-            op2 = easygui.fileopenbox('请选择图片', '文件资源管理器')
+            op2 = fileopenbox('请选择图片', '文件资源管理器')
             msgbox(f'识别结果如下：\n{ocr.ocr1(op2)}')
         else:
-            op2 = easygui.fileopenbox('请选择图片', '文件资源管理器')
+            op2 = fileopenbox('请选择图片', '文件资源管理器')
             ocr.ocr2(op2)
 
 
 m = Ocr_tools()
+
+
 try:
     m.main()
 except Exception as e:
-    easygui.msgbox(
+    msgbox(
         f'发生了问题，请不要再选择选项或选择文件的时候关闭窗口。如果没有非法的操作但仍然看到此窗口，请将：{e}发给我',
         '错误报告', '好的')
 
