@@ -40,7 +40,7 @@ def btn3_command():
 
 
 btn1 = Button(window, text='关于', font=('微软雅黑Light', 20), bg='red', fg='white', command=btn1_command)
-btn3 = Button(window, text='报听写', font=('微软雅黑', 14))
+btn3 = Button(window, text='报听写', font=('微软雅黑', 14), command=btn3_command)
 lbl1 = Label(window, text='''输出区
 
 ''', font=('微软雅黑', 14))
