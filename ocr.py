@@ -1,7 +1,4 @@
 import easyocr
-import pyttsx3
-
-engine = pyttsx3.init()
 
 
 def ocr(photo):

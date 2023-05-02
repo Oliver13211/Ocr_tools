@@ -1,11 +1,25 @@
 import ocr
-from easygui import fileopenbox
+from easygui import msgbox, fileopenbox
 from tkinter import *
 import ctypes
 import pyttsx3
-from easygui_qt import show_message as sm
+from time import sleep
 
-speak = pyttsx3.init()
+zh_voice_id = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ZH-CN_HUIHUI_11.0"
+engine = pyttsx3.init()
+engine.setProperty('voice', zh_voice_id)
+volume = engine.getProperty('volume')
+engine.setProperty('volume', volume + 10.0)
+engine.say("欢迎使用OCR工具，可以使用此工具进行图片文字识别。")
+engine.runAndWait()
+# voices = engine.getProperty('voices')
+# for voice in voices:
+#     print("Voice:")
+#     print(" - ID: %s" % voice.id)
+#     print(" - Name: %s" % voice.name)
+#     print(" - Languages: %s" % voice.languages)
+#     print(" - Gender: %s" % voice.gender)
+#     print(" - Age: %s" % voice.age)
 
 # 告诉操作系统使用程序自身的dpi适配
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
@@ -20,7 +34,7 @@ window.geometry('800x600')
 
 
 def btn1_command():
-    sm('''感谢您使用本工具
+    msgbox('''感谢您使用本工具
 本工具由年少无知的小学生Oliver开发，因学业压力较大，不能及时更新。有意见请发邮件至邮箱：2995306790@qq.com，可能不会回复，请谅解。
 感谢python的开发团队和Guido Van Rossum，感谢easygui、pyttsx3的开发者，也感谢兔子喝咖啡给我了灵感。
 
@@ -33,17 +47,19 @@ def btn3_command():
     op2 = fileopenbox('请选择文件')
     ocr_result = ocr.ocr(op2)
     s = 0
+    # print(ocr_result)
     for i in ocr_result:
         s += 1
+        engine.say(i)
         lbl1.configure(text=f'正在播报第{s}个词语，总共有{str(len(ocr_result))}个词语')
-        speak.say(i)
+        lbl1.update()
+        engine.runAndWait()
+        sleep(5)
 
 
 btn1 = Button(window, text='关于', font=('微软雅黑Light', 20), bg='red', fg='white', command=btn1_command)
-btn3 = Button(window, text='报听写', font=('微软雅黑', 14), command=btn3_command)
-lbl1 = Label(window, text='''输出区
-
-''', font=('微软雅黑', 14))
+btn3 = Button(window, text='报听写', font=('微软雅黑', 20), command=btn3_command, bg='yellow')
+lbl1 = Label(window, text='识别结果显示区',  font=('微软雅黑', 14))
 
 
 def btn2_command():
@@ -55,21 +71,19 @@ def btn2_command():
 {ocr_result}''')
 
 
-btn2 = Button(window, text='提取图中文字', font=('微软雅黑', 14), command=btn2_command)
+btn2 = Button(window, text='提取图中文字', font=('微软雅黑', 20), command=btn2_command, bg='yellow')
 
 
 class Ocr_tools:
     @staticmethod
     def main():
         btn1.place(x=700, y=0)
-        btn2.place(x=460, y=250)
-        btn3.place(x=610, y=250)
-        lbl1.place(x=0, y=250, height=400, width=500)
+        btn2.place(x=580, y=250)
+        btn3.place(x=670, y=450)
+        lbl1.place(x=0, y=0, height=400, width=500)
         window.mainloop()
 
 
 m = Ocr_tools()
 
 m.main()
-
-
