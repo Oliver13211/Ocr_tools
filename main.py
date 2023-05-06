@@ -10,24 +10,11 @@ engine = pyttsx3.init()
 engine.setProperty('voice', zh_voice_id)
 volume = engine.getProperty('volume')
 engine.setProperty('volume', volume + 10.0)
-engine.say("欢迎使用OCR工具，可以使用此工具进行图片文字识别。")
 engine.runAndWait()
-# voices = engine.getProperty('voices')
-# for voice in voices:
-#     print("Voice:")
-#     print(" - ID: %s" % voice.id)
-#     print(" - Name: %s" % voice.name)
-#     print(" - Languages: %s" % voice.languages)
-#     print(" - Gender: %s" % voice.gender)
-#     print(" - Age: %s" % voice.age)
-
-# 告诉操作系统使用程序自身的dpi适配
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
-# 获取屏幕的缩放因子
 ScaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
 
 window = Tk()
-# 设置程序缩放
 window.tk.call('tk', 'scaling', ScaleFactor / 100)
 window.title('ocr工具箱')
 window.geometry('800x600')
@@ -57,14 +44,22 @@ def btn3_command():
         sleep(5)
 
 
+
+def btn4_command():
+    lbl1.configure(text='识别结果显示区')
+    lbl1.update()
+
+
 btn1 = Button(window, text='关于', font=('微软雅黑Light', 20), bg='red', fg='white', command=btn1_command)
 btn3 = Button(window, text='报听写', font=('微软雅黑', 20), command=btn3_command, bg='yellow')
 lbl1 = Label(window, text='识别结果显示区',  font=('微软雅黑', 14))
+btn4 = Button(window, text='清除', font=('微软雅黑', 20), command=btn4_command, bg='violet', fg='white')
 
 
 def btn2_command():
     op1 = fileopenbox('请选择文件')
-    # print(op1)
+    if op1 == None:
+        msgbox('你没有选择文件，请重新选择')
     lbl1.configure(text='正在识别中')
     ocr_result = ocr.ocr(op1)
     lbl1.configure(text=f'''识别结果如下：
@@ -80,6 +75,7 @@ class Ocr_tools:
         btn1.place(x=700, y=0)
         btn2.place(x=580, y=250)
         btn3.place(x=670, y=450)
+        btn4.place(x=700, y=100)
         lbl1.place(x=0, y=0, height=400, width=500)
         window.mainloop()
 
