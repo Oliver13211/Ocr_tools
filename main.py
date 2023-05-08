@@ -31,17 +31,20 @@ Oliver  版本号：2.0.0''', '关于')
 
 
 def btn3_command():
-    op2 = fileopenbox('请选择文件')
-    ocr_result = ocr.ocr(op2)
-    s = 0
-    # print(ocr_result)
-    for i in ocr_result:
-        s += 1
-        engine.say(i)
-        lbl1.configure(text=f'正在播报第{s}个词语，总共有{str(len(ocr_result))}个词语')
-        lbl1.update()
-        engine.runAndWait()
-        sleep(5)
+    try:
+        op1 = None
+    except NameError:
+        msgbox('你没有选择文件，请点击选择图片按钮选择')
+    else:
+        s = 0
+        # print(ocr_result)
+        for i in ocr_result:
+            s += 1
+            engine.say(i)
+            lbl1.configure(text=f'正在播报第{s}个词语，总共有{str(len(ocr_result))}个词语')
+            lbl1.update()
+            engine.runAndWait()
+            sleep(5)
 
 
 
@@ -49,21 +52,33 @@ def btn4_command():
     lbl1.configure(text='识别结果显示区')
     lbl1.update()
 
+def btn5_command():
+    op1 = fileopenbox('请选择文件')
+    if op1 == None:
+        msgbox('你没有选择文件，请重新选择')
+    else:
+        lbl2.configure(text=f'选择的图片是：{op1}')
+        lbl2.place(x=0, y=0)
+
 
 btn1 = Button(window, text='关于', font=('微软雅黑Light', 20), bg='red', fg='white', command=btn1_command)
 btn3 = Button(window, text='报听写', font=('微软雅黑', 20), command=btn3_command, bg='yellow')
 lbl1 = Label(window, text='识别结果显示区',  font=('微软雅黑', 14))
 btn4 = Button(window, text='清除', font=('微软雅黑', 20), command=btn4_command, bg='violet', fg='white')
+lbl2 = Label(window, text='', font=('微软雅黑Light', 14))
+btn5 = Button(window, text='选择图片', font=('微软雅黑', 20), bg='blue', fg='white', command=btn5_command)
 
 
 def btn2_command():
-    op1 = fileopenbox('请选择文件')
-    if op1 == None:
-        msgbox('你没有选择文件，请重新选择')
-    lbl1.configure(text='正在识别中')
-    ocr_result = ocr.ocr(op1)
-    lbl1.configure(text=f'''识别结果如下：
-{ocr_result}''')
+    try:
+        op1 == None
+    except NameError:
+        msgbox('你没有选择文件，请点击选择图片按钮选择')
+    else:
+        lbl1.configure(text='正在识别中')
+        ocr_result = ocr.ocr(op1)
+        lbl1.configure(text=f'''识别结果如下：
+    {ocr_result}''')
 
 
 btn2 = Button(window, text='提取图中文字', font=('微软雅黑', 20), command=btn2_command, bg='yellow')
@@ -73,13 +88,14 @@ class Ocr_tools:
     @staticmethod
     def main():
         btn1.place(x=700, y=0)
-        btn2.place(x=580, y=250)
+        btn2.place(x=580, y=300)
         btn3.place(x=670, y=450)
         btn4.place(x=700, y=100)
+        btn5.place(x=650, y=200)
         lbl1.place(x=0, y=0, height=400, width=500)
         window.mainloop()
 
 
 m = Ocr_tools()
-
+ 
 m.main()
