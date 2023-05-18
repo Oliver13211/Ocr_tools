@@ -4,6 +4,7 @@ from tkinter import *
 import ctypes
 import pyttsx3
 from time import sleep
+import re
 
 zh_voice_id = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ZH-CN_HUIHUI_11.0"
 engine = pyttsx3.init()
@@ -18,7 +19,7 @@ window = Tk()
 window.tk.call('tk', 'scaling', ScaleFactor / 100)
 window.title('ocr工具箱')
 window.geometry('800x600')
-
+op1 = None
 
 def btn1_command():
     msgbox('''感谢您使用本工具
@@ -30,21 +31,43 @@ def btn1_command():
 Oliver  版本号：2.0.0''', '关于')
 
 
-def btn3_command():
-    try:
-        op1 = None
-    except NameError:
-        msgbox('你没有选择文件，请点击选择图片按钮选择')
+
+def btn5_command():
+    global op1 
+    op1 = fileopenbox('请选择文件')
+    print(op1)
+    str(op1)
+    if op1 == None:
+        msgbox('你没有选择文件，请重新选择')
     else:
+        lbl2.configure(text=f'选择的图片是：{op1}')
+        lbl2.place(x=0, y=0)
+
+
+def btn3_command():
+    global op1
+    if op1 == None:
+        msgbox('你没有选择文件')
+    else:
+        ocr_result = ocr.ocr(op1)
         s = 0
+        s_list = []
         # print(ocr_result)
         for i in ocr_result:
+            if re.search(r"\s",i): #判断字符串中是否有空格
+                item = i.split() #将字符串按照空格分割
+                #s_list.append(item)
+                s_list = s_list + item
+            else:
+                s_list.append(i)
+
+        for i in s_list:
             s += 1
             engine.say(i)
-            lbl1.configure(text=f'正在播报第{s}个词语，总共有{str(len(ocr_result))}个词语')
+            lbl1.configure(text=f'正在播报第{s}个词语，总共有{str(len(s_list))}个词语')
             lbl1.update()
             engine.runAndWait()
-            sleep(5)
+            sleep(20)
 
 
 
@@ -52,13 +75,6 @@ def btn4_command():
     lbl1.configure(text='识别结果显示区')
     lbl1.update()
 
-def btn5_command():
-    op1 = fileopenbox('请选择文件')
-    if op1 == None:
-        msgbox('你没有选择文件，请重新选择')
-    else:
-        lbl2.configure(text=f'选择的图片是：{op1}')
-        lbl2.place(x=0, y=0)
 
 
 btn1 = Button(window, text='关于', font=('微软雅黑Light', 20), bg='red', fg='white', command=btn1_command)
@@ -70,15 +86,14 @@ btn5 = Button(window, text='选择图片', font=('微软雅黑', 20), bg='blue',
 
 
 def btn2_command():
-    try:
-        op1 == None
-    except NameError:
-        msgbox('你没有选择文件，请点击选择图片按钮选择')
+    global op1
+    if op1 == None:
+        msgbox('你没有选择文件')
     else:
         lbl1.configure(text='正在识别中')
         ocr_result = ocr.ocr(op1)
         lbl1.configure(text=f'''识别结果如下：
-    {ocr_result}''')
+        {ocr_result}''')
 
 
 btn2 = Button(window, text='提取图中文字', font=('微软雅黑', 20), command=btn2_command, bg='yellow')
